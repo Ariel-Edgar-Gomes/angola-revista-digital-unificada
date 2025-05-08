@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, Menu, X } from 'lucide-react';
+import { Search, Menu, X, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import SearchBar from '@/components/SearchBar';
@@ -77,6 +77,13 @@ const Header = () => {
                       <span className="h-0.5 w-0 bg-[#e53935] group-hover:w-full transition-all duration-300"></span>
                     </Link>
                   </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <Link to="/admin" className="group px-4 py-2 text-sm font-medium text-[#1b1464] hover:text-[#e53935] transition-colors flex items-center gap-1">
+                      <Settings className="h-4 w-4 mr-1" />
+                      <span>Admin</span>
+                      <span className="h-0.5 w-0 bg-[#e53935] group-hover:w-full transition-all duration-300"></span>
+                    </Link>
+                  </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
               <Button className="bg-[#e53935] hover:bg-[#c62828] text-sm ml-2 button-shine" asChild>
@@ -104,6 +111,14 @@ const Header = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               Sobre
+            </Link>
+            <Link 
+              to="/admin" 
+              className="px-4 py-2 text-[#1b1464] hover:bg-[#f5f5f5] rounded-md transition-colors flex items-center gap-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Settings className="h-4 w-4" />
+              Área Administrativa
             </Link>
             <Link 
               to="/submeter" 
