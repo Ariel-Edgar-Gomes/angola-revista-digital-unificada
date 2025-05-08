@@ -26,7 +26,12 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
 }) => {
   return (
     <Link to={`/artigos/${id}`} className="group block h-full">
-      <Card className="h-full overflow-hidden transform transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl border-transparent hover:border-[#1b1464]/10">
+      <Card className="h-full overflow-hidden transform transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-xl border-transparent hover:border-[#1b1464]/10 relative">
+        {/* Decorative corner accent */}
+        <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
+          <div className="absolute transform rotate-45 bg-[#1b1464]/5 text-[#1b1464]/80 w-24 h-5 top-6 right-[-30px]"></div>
+        </div>
+        
         {image && (
           <div className="h-48 overflow-hidden">
             <img 
@@ -34,6 +39,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
               alt={title} 
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
             />
+            {/* Gradient overlay on hover */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1b1464]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
         )}
         <CardHeader className="pb-2 relative">
@@ -60,8 +67,12 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           </div>
         </CardFooter>
         
-        {/* Hover indicator */}
+        {/* Enhanced hover indicator */}
         <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-[#e53935] transition-all duration-300 group-hover:w-full"></div>
+        
+        {/* Subtle corner decorations */}
+        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-[#1b1464]/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-[#1b1464]/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </Card>
     </Link>
   );
