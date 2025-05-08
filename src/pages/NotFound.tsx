@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Layout from "../components/layout/Layout";
-import { ArrowLeft, Search } from "lucide-react";
+import { ArrowLeft, BookOpen, Search } from "lucide-react";
 
 const NotFound = () => {
   return (
@@ -19,6 +19,12 @@ const NotFound = () => {
                   404
                 </h1>
               </div>
+              
+              {/* Decorative elements */}
+              <div className="absolute -top-10 -left-10 w-16 h-16 border border-[#1b1464]/20 rounded-full animate-float opacity-70"></div>
+              <div className="absolute -bottom-10 -right-10 w-12 h-12 border border-[#e53935]/10 rounded-full animate-float opacity-70" style={{ animationDelay: "1.5s" }}></div>
+              <div className="absolute top-1/2 left-0 transform -translate-x-full -translate-y-1/2 w-2 h-2 bg-[#1b1464]/40 rounded-full"></div>
+              <div className="absolute top-1/2 right-0 transform translate-x-full -translate-y-1/2 w-2 h-2 bg-[#e53935]/40 rounded-full"></div>
             </div>
             
             <h2 className="text-3xl font-serif font-semibold mb-4 bg-gradient-to-r from-[#1b1464] to-gray-700 bg-clip-text text-transparent">
@@ -48,15 +54,31 @@ const NotFound = () => {
                 className="border-[#1b1464]/20 hover:border-[#1b1464] hover:bg-[#1b1464]/5 transition-all"
               >
                 <Link to="/artigos" className="flex items-center gap-2">
-                  <Search className="h-5 w-5" />
+                  <BookOpen className="h-5 w-5" />
                   <span>Explorar artigos</span>
                 </Link>
               </Button>
             </div>
           </div>
           
-          <div className="mt-20 opacity-10 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+          {/* Visual separator with enhanced design */}
+          <div className="mt-20 relative">
             <div className="h-px w-full bg-gradient-to-r from-transparent via-[#1b1464]/50 to-transparent"></div>
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center bg-[#1b1464]/10">
+                <Search className="w-4 h-4 text-[#1b1464]/60" />
+              </div>
+            </div>
+          </div>
+          
+          {/* Additional help section */}
+          <div className="mt-10 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            <h3 className="text-lg font-medium mb-3 text-[#1b1464]">Você também pode tentar:</h3>
+            <ul className="text-gray-600 space-y-2">
+              <li>Verificar o endereço URL para erros de digitação</li>
+              <li>Utilizar a pesquisa para encontrar conteúdo relacionado</li>
+              <li>Explorar as categorias de artigos disponíveis</li>
+            </ul>
           </div>
         </div>
       </div>
