@@ -25,7 +25,7 @@ const SearchBar: React.FC = () => {
       <div className={`flex overflow-hidden rounded-full transition-all duration-300 ${isFocused ? 'shadow-[0_0_0_2px_rgba(0,51,102,0.2),0_8px_20px_rgba(0,0,0,0.1)]' : 'shadow-md'}`}>
         <div className="relative flex-grow">
           <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 transition-colors duration-300 
-            ${isFocused ? 'text-metodista-blue' : 'text-gray-400'} h-4 w-4`} />
+            ${isFocused ? 'text-metodista-gold' : 'text-gray-400'} h-4 w-4`} />
           <Input
             type="text"
             placeholder="Pesquisar artigos científicos..."
@@ -38,8 +38,8 @@ const SearchBar: React.FC = () => {
         </div>
         <Button 
           type="submit" 
-          className="bg-metodista-blue hover:bg-metodista-blue/90 rounded-l-none rounded-r-full transition-all duration-300
-            hover:shadow-inner h-11"
+          className="bg-metodista-blue hover:bg-metodista-darkBlue rounded-l-none rounded-r-full transition-all duration-300 
+            hover:shadow-inner h-11 button-shine"
         >
           Pesquisar
         </Button>
