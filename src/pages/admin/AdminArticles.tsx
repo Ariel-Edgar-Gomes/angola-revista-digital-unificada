@@ -1,0 +1,132 @@
+
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from '@/components/ui/table';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { FileText, PenLine, Search, Settings, Trash2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { mockArticles } from '@/data/mockData';
+
+const AdminArticles = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const filteredArticles = mockArticles
+    .filter(article => 
+      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      article.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Artigos</h2>
+          <p className="text-muted-foreground">
+            Gerencie todos os artigos da Revista Digital UMA
+          </p>
+        </div>
+        <Button>
+          <FileText className="mr-2 h-4 w-4" />
+          Novo Artigo
+        </Button>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar artigos..."
+            className="pl-8"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <Button variant="outline" size="icon">
+          <Settings className="h-4 w-4" />
+        </Button>
+      </div>
+
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Título</TableHead>
+              <TableHead>Categoria</TableHead>
+              <TableHead>Data</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredArticles.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center">
+                  Nenhum artigo encontrado
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredArticles.map((article) => (
+                <TableRow key={article.id}>
+                  <TableCell className="font-medium">{article.title}</TableCell>
+                  <TableCell>{article.category}</TableCell>
+                  <TableCell>
+                    {new Date(article.date).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="bg-green-50 text-green-700">
+                      Publicado
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <Settings className="h-4 w-4" />
+                          <span className="sr-only">Abrir menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                        <DropdownMenuItem>
+                          <PenLine className="mr-2 h-4 w-4" />
+                          Editar
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-red-600">
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Excluir
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="text-sm text-muted-foreground">
+          Mostrando <span className="font-medium">{filteredArticles.length}</span> de{" "}
+          <span className="font-medium">{mockArticles.length}</span> artigos
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AdminArticles;
