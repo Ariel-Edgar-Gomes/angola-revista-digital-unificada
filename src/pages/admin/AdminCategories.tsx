@@ -19,15 +19,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Database, PenLine, Search, Settings, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { mockCategories } from '@/data/mockData';
+import { getAllCategories } from '@/data/mockData';
 
 const AdminCategories = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const categories = getAllCategories();
   
-  const filteredCategories = mockCategories
+  const filteredCategories = categories
     .filter(category => 
-      category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      category.description.toLowerCase().includes(searchTerm.toLowerCase())
+      category.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   return (
@@ -65,7 +65,6 @@ const AdminCategories = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
-              <TableHead>Descrição</TableHead>
               <TableHead>Artigos</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Ações</TableHead>
@@ -74,7 +73,7 @@ const AdminCategories = () => {
           <TableBody>
             {filteredCategories.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center">
+                <TableCell colSpan={4} className="text-center">
                   Nenhuma categoria encontrada
                 </TableCell>
               </TableRow>
@@ -82,10 +81,7 @@ const AdminCategories = () => {
               filteredCategories.map((category) => (
                 <TableRow key={category.id}>
                   <TableCell className="font-medium">{category.name}</TableCell>
-                  <TableCell>{category.description}</TableCell>
-                  <TableCell>
-                    {Math.floor(Math.random() * 20) + 1} {/* Simulando número de artigos */}
-                  </TableCell>
+                  <TableCell>{category.count}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className="bg-green-50 text-green-700">
                       Ativa
@@ -122,7 +118,7 @@ const AdminCategories = () => {
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-sm text-muted-foreground">
           Mostrando <span className="font-medium">{filteredCategories.length}</span> de{" "}
-          <span className="font-medium">{mockCategories.length}</span> categorias
+          <span className="font-medium">{categories.length}</span> categorias
         </div>
       </div>
     </div>

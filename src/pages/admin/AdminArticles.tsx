@@ -19,15 +19,16 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { FileText, PenLine, Search, Settings, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { mockArticles } from '@/data/mockData';
+import { getAllArticles } from '@/data/mockData';
 
 const AdminArticles = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const articles = getAllArticles();
   
-  const filteredArticles = mockArticles
+  const filteredArticles = articles
     .filter(article => 
       article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+      article.abstract.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   return (
@@ -122,7 +123,7 @@ const AdminArticles = () => {
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-sm text-muted-foreground">
           Mostrando <span className="font-medium">{filteredArticles.length}</span> de{" "}
-          <span className="font-medium">{mockArticles.length}</span> artigos
+          <span className="font-medium">{articles.length}</span> artigos
         </div>
       </div>
     </div>
