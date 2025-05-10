@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,11 +16,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { PenLine, Search, Settings, Trash2, UserPlus, X } from 'lucide-react';
+import { PenLine, Search, Settings, Trash2, UserPlus, X, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import UserForm, { UserFormValues } from '@/components/admin/UserForm';
 import { useToast } from '@/hooks/use-toast';
+import RoleManagement from '@/components/admin/RoleManagement';
 
 // Dados fictícios de usuários
 const mockUsers = [
@@ -40,6 +40,7 @@ const AdminUsers = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
   const [users, setUsers] = useState(mockUsers);
+  const [isRoleManagementOpen, setIsRoleManagementOpen] = useState(false);
   const { toast } = useToast();
   
   const filteredUsers = users
@@ -107,6 +108,10 @@ const AdminUsers = () => {
     setEditingUser(null);
   };
 
+  const handleOpenRoleManagement = () => {
+    setIsRoleManagementOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -116,10 +121,16 @@ const AdminUsers = () => {
             Gerencie os usuários da Revista Digital UMA
           </p>
         </div>
-        <Button onClick={handleCreateUser}>
-          <UserPlus className="mr-2 h-4 w-4" />
-          Novo Usuário
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Button onClick={handleCreateUser}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Novo Usuário
+          </Button>
+          <Button variant="outline" onClick={handleOpenRoleManagement}>
+            <Users className="mr-2 h-4 w-4" />
+            Gerenciar Funções
+          </Button>
+        </div>
       </div>
 
       {isFormOpen ? (
@@ -238,6 +249,11 @@ const AdminUsers = () => {
           </div>
         </>
       )}
+
+      <RoleManagement 
+        isOpen={isRoleManagementOpen} 
+        onClose={() => setIsRoleManagementOpen(false)} 
+      />
     </div>
   );
 };
