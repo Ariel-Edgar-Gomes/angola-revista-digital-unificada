@@ -22,11 +22,21 @@ import { Badge } from '@/components/ui/badge';
 import { getAllArticles } from '@/data/mockData';
 import ArticleForm from '@/components/admin/ArticleForm';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 
 const AdminArticles = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingArticle, setEditingArticle] = useState<any>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
   const { toast } = useToast();
   
   const articles = getAllArticles();
@@ -36,6 +46,13 @@ const AdminArticles = () => {
       article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       article.abstract.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+  // Calculate pagination values
+  const totalArticles = filteredArticles.length;
+  const totalPages = Math.ceil(totalArticles / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, totalArticles);
+  const currentArticles = filteredArticles.slice(startIndex, endIndex);
 
   const handleCreateArticle = () => {
     setEditingArticle(null);
@@ -67,6 +84,57 @@ const AdminArticles = () => {
   const handleFormCancel = () => {
     setIsFormOpen(false);
     setEditingArticle(null);
+  };
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+    
+    if (totalPages <= maxPagesToShow) {
+      // If total pages is less than or equal to max pages to show, display all pages
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Always show first page
+      pages.push(1);
+      
+      // Calculate start and end page numbers
+      let startPage = Math.max(2, currentPage - Math.floor(maxPagesToShow / 2));
+      let endPage = Math.min(totalPages - 1, startPage + maxPagesToShow - 3);
+      
+      // Adjust start page if we're near the end
+      if (endPage === totalPages - 1) {
+        startPage = Math.max(2, endPage - (maxPagesToShow - 3));
+      }
+      
+      // Add ellipsis after first page if needed
+      if (startPage > 2) {
+        pages.push('ellipsis');
+      }
+      
+      // Add pages in the middle
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+      
+      // Add ellipsis before last page if needed
+      if (endPage < totalPages - 1) {
+        pages.push('ellipsis');
+      }
+      
+      // Always show last page
+      pages.push(totalPages);
+    }
+    
+    return pages;
   };
 
   return (
@@ -130,14 +198,14 @@ const AdminArticles = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredArticles.length === 0 ? (
+                {currentArticles.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center">
                       Nenhum artigo encontrado
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredArticles.map((article) => (
+                  currentArticles.map((article) => (
                     <TableRow key={article.id}>
                       <TableCell className="font-medium">{article.title}</TableCell>
                       <TableCell>{article.category}</TableCell>
@@ -180,11 +248,47 @@ const AdminArticles = () => {
             </Table>
           </div>
 
-          <div className="flex items-center justify-end space-x-2 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="text-sm text-muted-foreground">
-              Mostrando <span className="font-medium">{filteredArticles.length}</span> de{" "}
-              <span className="font-medium">{articles.length}</span> artigos
+              Mostrando <span className="font-medium">{startIndex + 1}</span> a{" "}
+              <span className="font-medium">{endIndex}</span> de{" "}
+              <span className="font-medium">{totalArticles}</span> artigos
             </div>
+            
+            {totalPages > 1 && (
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                    />
+                  </PaginationItem>
+                  
+                  {getPageNumbers().map((page, index) => (
+                    <PaginationItem key={index}>
+                      {page === 'ellipsis' ? (
+                        <span className="px-4 py-2">...</span>
+                      ) : (
+                        <PaginationLink 
+                          onClick={() => handlePageChange(page as number)}
+                          isActive={page === currentPage}
+                        >
+                          {page}
+                        </PaginationLink>
+                      )}
+                    </PaginationItem>
+                  ))}
+                  
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
           </div>
         </>
       )}
