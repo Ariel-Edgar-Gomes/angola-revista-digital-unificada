@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Settings, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import UserTable from './UserTable';
+import UserPagination from './UserPagination';
 
 interface User {
   id: number;
@@ -25,6 +26,8 @@ const UserList: React.FC<UserListProps> = ({
   onDeleteUser 
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Quantidade de usuários por página
   
   const filteredUsers = users
     .filter(user => 
@@ -32,6 +35,24 @@ const UserList: React.FC<UserListProps> = ({
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.role.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+  // Calcular número total de páginas
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / itemsPerPage));
+  
+  // Garantir que a página atual seja válida
+  if (currentPage > totalPages) {
+    setCurrentPage(totalPages);
+  }
+  
+  // Obter apenas os usuários da página atual
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <>
@@ -42,7 +63,10 @@ const UserList: React.FC<UserListProps> = ({
             placeholder="Buscar usuários..."
             className="pl-8"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1); // Resetar para a primeira página ao buscar
+            }}
           />
         </div>
         <Button variant="outline" size="icon">
@@ -51,16 +75,24 @@ const UserList: React.FC<UserListProps> = ({
       </div>
 
       <UserTable 
-        users={filteredUsers}
+        users={paginatedUsers}
         onEditUser={onEditUser}
         onDeleteUser={onDeleteUser}
       />
 
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0 py-4">
         <div className="text-sm text-muted-foreground">
-          Mostrando <span className="font-medium">{filteredUsers.length}</span> de{" "}
-          <span className="font-medium">{users.length}</span> usuários
+          Mostrando <span className="font-medium">{paginatedUsers.length}</span> de{" "}
+          <span className="font-medium">{filteredUsers.length}</span> usuários
         </div>
+        
+        {totalPages > 1 && (
+          <UserPagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
       </div>
     </>
   );
