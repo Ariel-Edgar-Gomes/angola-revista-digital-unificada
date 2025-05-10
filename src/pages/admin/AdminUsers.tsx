@@ -82,10 +82,13 @@ const AdminUsers = () => {
         description: `O usuário ${data.name} foi atualizado com sucesso.`,
       });
     } else {
-      // Criar novo usuário
+      // Criar novo usuário - corrigir o tipo para garantir que todas as propriedades necessárias sejam fornecidas
       const newUser = {
         id: users.length + 1,
-        ...data,
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        status: data.status,
       };
       setUsers([...users, newUser]);
       
